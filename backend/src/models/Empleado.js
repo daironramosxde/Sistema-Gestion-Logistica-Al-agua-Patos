@@ -16,10 +16,10 @@ const empleadoSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  cargo: {
-    type: String,
+  id_area: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Area",
     required: true,
-    trim: true,
   },
 });
 

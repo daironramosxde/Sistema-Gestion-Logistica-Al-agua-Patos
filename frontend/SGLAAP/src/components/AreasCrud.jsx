@@ -1,111 +1,104 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function RecursoCrud() {
-  const [listaRecursos, setListaRecursos] = useState([]);
-  const [recursoEditado, setRecursoEditado] = useState(null);
-  const [nuevoRecurso, setNuevoRecurso] = useState({
-    nombre_recurso: "",
+function AreaCrud() {
+  const [listaAreas, setListaArea] = useState([]);
+  const [areaEditada, setAreaEditada] = useState(null);
+  const [nuevaArea, setNuevaArea] = useState({
+    nombre_area: "",
     cantidad: 0,
     ubicacion: "",
   });
 
   useEffect(() => {
-    const consultarRecursos = async () => {
+    const consultarAreas = async () => {
       try {
-        const response = await axios.get("http://localhost:9000/api/recursos");
-        setListaRecursos(response.data);
+        const response = await axios.get("http://localhost:9000/api/areas");
+        setListaArea(response.data);
       } catch (error) {
-        console.error("Ocurrió este error al consultar los recursos: ", error);
+        console.error("Ocurrió este error al consultar las Áreas: ", error);
       }
     };
-    consultarRecursos();
+    consultarAreas();
   }, []);
 
-
-
-  const actualizarRecurso = async (_id) => {
-    const recurso = listaRecursos.find((r) => r._id === _id);
-    setRecursoEditado(recurso);
+  const actualizarArea = async (_id) => {
+    const area = listaAreas.find((a) => a._id === _id);
+    setAreaEditada(area);
   };
 
   const guardarCambios = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:9000/api/recursos/${recursoEditado._id}`,
-        recursoEditado
+        `http://localhost:9000/api/areas/${areaEditada._id}`,
+        areaEditada
       );
-      setListaRecursos((prev) =>
-        prev.map((recurso) =>
-          recurso._id === recursoEditado._id ? response.data : recurso
+      setListaArea((prev) =>
+        prev.map((area) =>
+          area._id === areaEditada._id ? response.data : area
         )
       );
-      setRecursoEditado(null); // Cerrar el modal
-      alert("Recurso actualizado con éxito");
+      setAreaEditada(null); // Cerrar el modal
+      alert("Área actualizada con éxito");
     } catch (error) {
-      console.error("Error al actualizar el recurso:", error);
+      console.error("Error al actualizar el área:", error);
     }
   };
 
-  const borarrRecurso = async (_id) => {
+  const borrarArea = async (_id) => {
     try {
-      await axios.delete(`http://localhost:9000/api/recursos/${_id}`);
-      setListaRecursos(listaRecursos.filter((recurso) => recurso._id !== _id));
-      alert("El recurso fue eliminado con éxito");
+      await axios.delete(`http://localhost:9000/api/areas/${_id}`);
+      setListaArea(listaAreas.filter((area) => area._id !== _id));
+      alert("El área fue eliminada con éxito");
     } catch (error) {
-      console.error("Error al eliminar el recurso:", error);
+      console.error("Error al eliminar el área:", error);
     }
   };
-  const agregarRecurso = async () => {
+
+  const agregarArea = async () => {
     try {
-      //      Realiza una solicitud POST a la API para agregar el nuevo recurso
-    const response = await axios.post("http://localhost:9000/api/recursos", nuevoRecurso);
-      // Actualiza la lista de recursos con el nuevo recurso agregado
-    setListaRecursos((prev) => [...prev, response.data]);
-      // Limpia el formulario
-    setNuevoRecurso({
-        nombre_recurso: "",
+      const response = await axios.post("http://localhost:9000/api/areas", nuevaArea);
+      setListaArea((prev) => [...prev, response.data]);
+      setNuevaArea({
+        nombre_area: "",
         cantidad: 1,
         ubicacion: "",
-    });
-        alert("Recurso agregado con éxito");
+      });
+      alert("Área agregada con éxito");
     } catch (error) {
-        console.error("Error al agregar el recurso:", error);
+      console.error("Error al agregar el área:", error);
     }
   };
 
   return (
-      <div className="container-todo">
+    <div className="container-todo">
       <table className="table">
         <thead>
           <tr>
             <th scope="col">ID</th>
-            <th scope="col">nombre</th>
-            <th scope="col">cantidad</th>
-            <th scope="col">ubicacion</th>
-            <th scope="col">Acciones</th>
+            <th scope="col">Nombre</th>
           </tr>
         </thead>
         <tbody>
-        {listaRecursos.map((recurso, index) => (
-            <tr key={recurso._id || index}> 
-              <th scope="row">{recurso._id}</th>
-              <td>{recurso.nombre_recurso}</td>
-              <td>{recurso.cantidad}</td>
-              <td>{recurso.ubicacion}</td>
+        {listaAreas.map((area, index) => (
+            <tr key={area._id || index}> 
+              <th scope="row">{area._id}</th>
+              <td>{area.nombre_area}</td>
+              <td>{area.cantidad}</td>
+              <td>{area.ubicacion}</td>
               <td>
                 <div className="btn-group" role="group" aria-label="Basic example">
                   <button
                     type="button"
                     className="btn btn-info"
-                    onClick={() => actualizarRecurso(recurso._id)}
+                    onClick={() => actualizarArea(area._id)}
                   >
                     Editar
                   </button>
                   <button
                     type="button"
                     className="btn btn-danger"
-                    onClick={() => borarrRecurso(recurso._id)}
+                    onClick={() => borrarArea(area._id)}
                   >
                     Eliminar
                   </button>
@@ -117,24 +110,24 @@ function RecursoCrud() {
       </table>
       {/*Modal de Agregar*/}
       <div className="container-agregar">
-        <h4>Agregar Nuevo Recurso</h4>
+        <h4>Agregar Nueva Área</h4>
         <form
           onSubmit={(e) => {
             e.preventDefault(); // Evita que la página se recargue
-            agregarRecurso();
+            agregarArea();
           }}
         >
           <div className="mb-3">
-            <label htmlFor="nombreRecurso" className="form-label">
-              Nombre del Recurso:
+            <label htmlFor="nombreArea" className="form-label">
+              Nombre del Área:
             </label>
             <input
               type="text"
               className="form-control"
-              id="nombreRecurso"
-              value={nuevoRecurso.nombre_recurso}
+              id="nombreArea"
+              value={nuevaArea.nombre_area}
               onChange={(e) =>
-                setNuevoRecurso({ ...nuevoRecurso, nombre_recurso: e.target.value })
+                setNuevaArea({ ...nuevaArea, nombre_area: e.target.value })
               }
               required
             />
@@ -147,9 +140,9 @@ function RecursoCrud() {
               type="number"
               className="form-control"
               id="cantidad"
-              value={nuevoRecurso.cantidad}
+              value={nuevaArea.cantidad}
               onChange={(e) =>
-                setNuevoRecurso({ ...nuevoRecurso, cantidad: parseInt(e.target.value) })
+                setNuevaArea({ ...nuevaArea, cantidad: parseInt(e.target.value) })
               }
               required
             />
@@ -162,9 +155,9 @@ function RecursoCrud() {
               type="text"
               className="form-control"
               id="ubicacion"
-              value={nuevoRecurso.ubicacion}
+              value={nuevaArea.ubicacion}
               onChange={(e) =>
-                setNuevoRecurso({ ...nuevoRecurso, ubicacion: e.target.value })
+                setNuevaArea({ ...nuevaArea, ubicacion: e.target.value })
               }
               required
             />
@@ -173,18 +166,18 @@ function RecursoCrud() {
             Agregar
           </button>
         </form>
-        </div>
+      </div>
       {/* Modal de edición */}
-      {recursoEditado && (
+      {areaEditada && (
         <div className="modal" style={{ display: "block" }}>
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Editar Recurso</h5>
+                <h5 className="modal-title">Editar Área</h5>
                 <button
                   type="button"
                   className="btn-close"
-                  onClick={() => setRecursoEditado(null)}
+                  onClick={() => setAreaEditada(null)}
                 ></button>
               </div>
               <div className="modal-body">
@@ -197,11 +190,11 @@ function RecursoCrud() {
                       type="text"
                       className="form-control"
                       id="nombre"
-                      value={recursoEditado.nombre_recurso}
+                      value={areaEditada.nombre_area}
                       onChange={(e) =>
-                        setRecursoEditado({
-                          ...recursoEditado,
-                          nombre_recurso: e.target.value,
+                        setAreaEditada({
+                          ...areaEditada,
+                          nombre_area: e.target.value,
                         })
                       }
                     />
@@ -214,10 +207,10 @@ function RecursoCrud() {
                       type="number"
                       className="form-control"
                       id="cantidad"
-                      value={recursoEditado.cantidad}
+                      value={areaEditada.cantidad}
                       onChange={(e) =>
-                        setRecursoEditado({
-                          ...recursoEditado,
+                        setAreaEditada({
+                          ...areaEditada,
                           cantidad: e.target.value,
                         })
                       }
@@ -231,10 +224,10 @@ function RecursoCrud() {
                       type="text"
                       className="form-control"
                       id="ubicacion"
-                      value={recursoEditado.ubicacion}
+                      value={areaEditada.ubicacion}
                       onChange={(e) =>
-                        setRecursoEditado({
-                          ...recursoEditado,
+                        setAreaEditada({
+                          ...areaEditada,
                           ubicacion: e.target.value,
                         })
                       }
@@ -246,7 +239,7 @@ function RecursoCrud() {
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={() => setRecursoEditado(null)}
+                  onClick={() => setAreaEditada(null)}
                 >
                   Cancelar
                 </button>
@@ -266,4 +259,4 @@ function RecursoCrud() {
   );
 }
 
-export default RecursoCrud;
+export default AreaCrud;
