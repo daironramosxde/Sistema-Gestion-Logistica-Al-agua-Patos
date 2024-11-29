@@ -5,6 +5,7 @@ dotenv.config();
 import conectarBD from "./config/conexion.js";
 import empleadosRoutes from "./routes/empleadosRoutes.js";
 import areasRoutes from "./routes/areas.js";
+import ausenciasRoutes from "./routes/ausencias.js"
 import recursosRoutes from "./routes/recursos.js"; // Rutas de recursos
 import path from "path";
 import { fileURLToPath } from "url";
@@ -44,10 +45,11 @@ app.use(cors());
 app.use(express.json());
 app.use("/api", empleadosRoutes);
 app.use("/api", areasRoutes);
+app.use("/api", ausenciasRoutes);
 app.use("/api", recursosRoutes); // Rutas de recursos
 app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerJsDoc(swaggerSpec)));
 
-var corsOptions = {
+let corsOptions = {
     origin: '*',
     methods: "GET, POST, OPTIONS, PUT, DELETE",
     optionsSuccessStatus: 200,
