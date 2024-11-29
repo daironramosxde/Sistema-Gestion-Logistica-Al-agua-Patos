@@ -1,28 +1,17 @@
 import Horario from '../models/horario.js';
 import Empleado from '../models/empleado.js';
 
-// Obtener todos los horarios
-export const obtenerHorarios = async (req, res) => {
-  try {
-    const horarios = await Horario.find().populate('idEmpleado', 'nombre email');
-    res.json(horarios);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener los horarios.' });
-  }
-};
-
-// Crear un nuevo horario
 export const crearHorario = async (req, res) => {
-  const { idEmpleado, diaSemana, horaEntrada, horaSalida } = req.body;
+  const { id_empleado, diaSemana, horaEntrada, horaSalida } = req.body;
+
   try {
-    // Verifica que el empleado exista
-    const empleado = await Empleado.findById(idEmpleado);
+    const empleado = await Empleado.findById(id_empleado);
     if (!empleado) {
       return res.status(404).json({ error: 'Empleado no encontrado.' });
     }
 
     const nuevoHorario = new Horario({
-      idEmpleado,
+      id_empleado,
       diaSemana,
       horaEntrada,
       horaSalida,
@@ -31,19 +20,43 @@ export const crearHorario = async (req, res) => {
     const horarioGuardado = await nuevoHorario.save();
     res.status(201).json(horarioGuardado);
   } catch (error) {
+    console.error('Error al crear el horario:', error);
     res.status(500).json({ error: 'Error al crear el horario.' });
   }
 };
 
-// Actualizar un horario
+export const obtenerHorarios = async (req, res) => {
+  try {
+    const horarios = await Horario.find().populate('id_empleado', 'nombre correo rol');
+    res.json(horarios);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener los horarios.' });
+  }
+};
+
+export const consultarHorario = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const horario = await Horario.findById(id);
+    if (!horario) {
+      return res.status(404).json({ error: 'Horario no encontrado.' });
+    }
+
+    res.json(horario);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al consultar el horario.' });
+  }
+};
+
 export const actualizarHorario = async (req, res) => {
   const { id } = req.params;
-  const { idEmpleado, diaSemana, horaEntrada, horaSalida } = req.body;
+  const { id_empleado, diaSemana, horaEntrada, horaSalida } = req.body;
 
   try {
     const horarioActualizado = await Horario.findByIdAndUpdate(
       id,
-      { idEmpleado, diaSemana, horaEntrada, horaSalida },
+      { id_empleado, diaSemana, horaEntrada, horaSalida },
       { new: true, runValidators: true }
     );
 
@@ -57,7 +70,6 @@ export const actualizarHorario = async (req, res) => {
   }
 };
 
-// Eliminar un horario
 export const eliminarHorario = async (req, res) => {
   const { id } = req.params;
 

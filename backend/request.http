@@ -56,3 +56,31 @@ Content-Type: application/json
 
 ###
 DELETE http://localhost:9000/api/recursos/{id} HTTP/1.1
+
+###
+POST http://localhost:9000/api/horarios HTTP/1.1
+Content-Type: application/json
+
+{
+    "id_empleado": "674613338f235f3862d13c42",
+    "dia_semana": "Lunes",
+    "hora_entrada": "08:00 AM",
+    "hora_salida": "08:00 PM"
+}
+
+###
+GET "http://localhost:9000/api/horarios" HTTP/1.1
+
+###
+GET http://localhost:9000/api/horarios/{id} HTTP/1.1
+
+###
+PUT http://localhost:9000/api/horarios/{id} HTTP/1.1
+Content-Type: application/json
+
+{
+    "id_empleado": "674712e9aea38c1dad9a6687",
+    "dia_semana": "Lunes",
+    "hora_entrada": "08:00 AM",
+    "hora_salida": "08:00 PM"
+}
