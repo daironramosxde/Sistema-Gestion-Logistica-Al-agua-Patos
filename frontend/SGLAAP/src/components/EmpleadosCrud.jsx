@@ -3,27 +3,32 @@ import axios from "axios";
 
 function EmpleadosCrud() {
   const [listaEmpleados, setListaEmpleados] = useState([]);
+  const [listaAreas, setListaAreas] = useState([]);
   const [empleadoEditado, setEmpleadoEditado] = useState(null);
   const [nuevoEmpleado, setNuevoEmpleado] = useState({
     nombre: "",
     correo: "",
     telefono: "",
-    cargo: "",
+    id_area: "",
   });
 
   useEffect(() => {
-    const consultarEmpleados = async () => {
+    const consultarDatos = async () => {
       try {
-        const response = await axios.get("http://localhost:9000/api/empleados");
-        setListaEmpleados(response.data);
+        const [empleadosResponse, areasResponse] = await Promise.all([
+          axios.get("http://localhost:9000/api/empleados"),
+          axios.get("http://localhost:9000/api/areas"),
+        ]);
+        setListaEmpleados(empleadosResponse.data);
+        setListaAreas(areasResponse.data);
       } catch (error) {
-        console.error("Ocurrió un error al consultar los empleados: ", error);
+        console.error("Ocurrió un error al consultar los datos: ", error);
       }
     };
-    consultarEmpleados();
+    consultarDatos();
   }, []);
 
-  const actualizarEmpleado = async (_id) => {
+  const actualizarEmpleado = (_id) => {
     const empleado = listaEmpleados.find((e) => e._id === _id);
     setEmpleadoEditado(empleado);
   };
@@ -67,7 +72,7 @@ function EmpleadosCrud() {
         nombre: "",
         correo: "",
         telefono: "",
-        cargo: "",
+        id_area: "",
       });
       alert("Empleado agregado con éxito");
     } catch (error) {
@@ -76,17 +81,15 @@ function EmpleadosCrud() {
   };
 
   return (
-    <div className="container text-center mb-3">
-      <h4 className="bg-light">Lista de Empleados</h4>
-      <hr />
-      <table className="table table-sm">
-        <thead className="table-light">
+    <div className="container-todo">
+      <table className="table">
+        <thead>
           <tr>
             <th scope="col">ID</th>
             <th scope="col">Nombre</th>
             <th scope="col">Correo</th>
             <th scope="col">Teléfono</th>
-            <th scope="col">Cargo</th>
+            <th scope="col">Área</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
@@ -97,7 +100,12 @@ function EmpleadosCrud() {
               <td>{empleado.nombre}</td>
               <td>{empleado.correo}</td>
               <td>{empleado.telefono}</td>
-              <td>{empleado.cargo}</td>
+              <td>
+                {
+                  listaAreas.find((area) => area._id === empleado.id_area)?.nombre_area ||
+                  "Sin área"
+                }
+              </td>
               <td>
                 <div className="btn-group" role="group">
                   <button
@@ -120,8 +128,7 @@ function EmpleadosCrud() {
           ))}
         </tbody>
       </table>
-      {/* Formulario para agregar empleado */}
-      <div className="container mt-4">
+      <div className="container-agregar">
         <h4>Agregar Nuevo Empleado</h4>
         <form
           onSubmit={(e) => {
@@ -175,26 +182,31 @@ function EmpleadosCrud() {
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="cargo" className="form-label">
-              Cargo:
+            <label htmlFor="area" className="form-label">
+              Área:
             </label>
-            <input
-              type="text"
+            <select
               className="form-control"
-              id="cargo"
-              value={nuevoEmpleado.cargo}
+              id="area"
+              value={nuevoEmpleado.id_area}
               onChange={(e) =>
-                setNuevoEmpleado({ ...nuevoEmpleado, cargo: e.target.value })
+                setNuevoEmpleado({ ...nuevoEmpleado, id_area: e.target.value })
               }
               required
-            />
+            >
+              <option value="">Seleccione un área</option>
+              {listaAreas.map((area) => (
+                <option key={area._id} value={area._id}>
+                  {area.nombre_area}
+                </option>
+              ))}
+            </select>
           </div>
           <button type="submit" className="btn btn-primary">
             Agregar
           </button>
         </form>
       </div>
-      {/* Modal para editar empleado */}
       {empleadoEditado && (
         <div className="modal" style={{ display: "block" }}>
           <div className="modal-dialog">
@@ -261,21 +273,26 @@ function EmpleadosCrud() {
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="cargo" className="form-label">
-                      Cargo
+                    <label htmlFor="area" className="form-label">
+                      Área
                     </label>
-                    <input
-                      type="text"
+                    <select
                       className="form-control"
-                      id="cargo"
-                      value={empleadoEditado.cargo}
+                      id="area"
+                      value={empleadoEditado.id_area}
                       onChange={(e) =>
                         setEmpleadoEditado({
                           ...empleadoEditado,
-                          cargo: e.target.value,
+                          id_area: e.target.value,
                         })
                       }
-                    />
+                    >
+                      {listaAreas.map((area) => (
+                        <option key={area._id} value={area._id}>
+                          {area.nombre_area}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </form>
               </div>
@@ -292,7 +309,7 @@ function EmpleadosCrud() {
                   className="btn btn-primary"
                   onClick={guardarCambios}
                 >
-                  Guardar
+                  Guardar cambios
                 </button>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import React from 'react'
 import EmpleadosCrud from '../../components/EmpleadosCrud';
+import "../css/crud.css";
 
 function Empleados() {
     return (
