@@ -1,13 +1,15 @@
-import { useRoutes, BrowserRouter as Rutas } from "react-router-dom";
-import Inicio from "../src/pages/Inicio";
-import Navbar from "../src/components/Navbar";
+import { BrowserRouter as Rutas, useRoutes } from "react-router-dom";
 import Footer from "../src/components/Footer";
-import UserBar from "./components/UserBar";
-import Recursos from "../src/pages/Recursos";
+import Navbar from "../src/components/Navbar";
 import Empleados from "../src/pages/Empleados";
+import Inicio from "../src/pages/Inicio";
+import NotFoundPage from "../src/pages/NotFound";
+import Recursos from "../src/pages/Recursos";
+import UserBar from "./components/UserBar";
 import Areas from "./pages/Areas";
 import Ausencias from "./pages/Ausencias";
-import NotFoundPage from "../src/pages/NotFound";
+import Usuarios from "./pages/Usuarios";
+import Horarios from "./pages/Horarios";
 
 const AppRoutes = () => {
   let routes = useRoutes([
@@ -16,6 +18,8 @@ const AppRoutes = () => {
     { path: "/Empleados", element: <Empleados /> },  // Corregido: 'elemnt' a 'element'
     { path: "/Ausencias", element: <Ausencias /> },
     { path: "/Areas", element: <Areas /> },  // Corregido: 'elemnt' a 'element'
+    { path: "/Usuarios", element: <Usuarios /> },
+    { path: "/Horarios", element: <Horarios /> },  // Corregido: 'elemnt' a 'element'
     { path: "*", element: <NotFoundPage /> }, ]); // Corregido: 'elemnt' a 'element", element: <Areas /> }, />  ]);
   return routes;
 };
