@@ -2,10 +2,9 @@ import express from "express";
 import {
   crearHorario,
   obtenerHorarios,
-  consultarHorario,
   actualizarHorario,
-  borrarHorario,
-} from "../controllers/controladorHorario.js";
+  eliminarHorario,
+} from "../controllers/horariosController.js";
 
 const router = express.Router();
 
@@ -78,25 +77,6 @@ const router = express.Router();
  *                 $ref: '#/components/schemas/Horario'
  */
 
-/**
- * @swagger
- * /horarios/{id}:
- *   get:
- *     summary: Consulta un horario por su ID
- *     tags: [Horarios]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID del horario a consultar
- *     responses:
- *       200:
- *         description: Detalle del horario consultado
- *       404:
- *         description: No se encontró el horario
- */
 
 /**
  * @swagger
@@ -146,8 +126,7 @@ const router = express.Router();
 
 router.post("/horarios", crearHorario);
 router.get("/horarios", obtenerHorarios);
-router.get("/horarios/:id", consultarHorario);
 router.put("/horarios/:id", actualizarHorario);
-router.delete("/horarios/:id", borrarHorario);
+router.delete("/horarios/:id", eliminarHorario);
 
 export default router;

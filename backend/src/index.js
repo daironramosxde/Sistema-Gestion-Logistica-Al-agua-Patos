@@ -1,23 +1,26 @@
 // index.js
-import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
-dotenv.config();
-import conectarBD from "./config/conexion.js";
-import empleadosRoutes from "./routes/empleadosRoutes.js";
-import areasRoutes from "./routes/areas.js";
-import ausenciasRoutes from "./routes/ausencias.js"
-import recursosRoutes from "./routes/recursos.js"; // Rutas de recursos
+import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import cors from "cors";
+import conectarBD from "./config/conexion.js";
+import areasRoutes from "./routes/areas.js";
+import ausenciasRoutes from "./routes/ausencias.js";
+import empleadosRoutes from "./routes/empleadosRoutes.js";
+import recursosRoutes from "./routes/recursos.js"; // Rutas de recursos
+import rolRoutes from "./routes/rolRoutes.js";
+import usuarioRoutes from "./routes/usuarioRoutes.js";
+import horariosRoutes from './routes/horarios.js';
+dotenv.config();
 
 // Configurar __dirname para módulos ES
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // swagger
-import swaggerUI from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUI from "swagger-ui-express";
 
 const swaggerSpec = {
     definition: {
@@ -47,6 +50,9 @@ app.use("/api", empleadosRoutes);
 app.use("/api", areasRoutes);
 app.use("/api", ausenciasRoutes);
 app.use("/api", recursosRoutes); // Rutas de recursos
+app.use("/api", usuarioRoutes);
+app.use("/api", rolRoutes);
+app.use('/api', horariosRoutes);
 app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerJsDoc(swaggerSpec)));
 
 let corsOptions = {
