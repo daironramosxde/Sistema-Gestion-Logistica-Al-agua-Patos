@@ -1,10 +1,10 @@
 import express from "express";
 import {
-  crearHorario,
-  obtenerHorarios,
+  registrarHorario,
+  listarHorarios,
   consultarHorario,
-  actualizarHorario,
-  eliminarHorario,
+  modificarHorario,
+  borrarHorario,
 } from "../controllers/horariosController.js";
 
 const router = express.Router();
@@ -16,37 +16,37 @@ const router = express.Router();
  *     Horario:
  *       type: object
  *       properties:
- *         idEmpleado:
+ *         id_empleado:
  *           type: string
- *           description: ID del empleado asociado al horario
- *         diaSemana:
+ *           description: ID del empleado asociado
+ *         dia_semana:
  *           type: string
- *           description: Día de la semana del horario (por ejemplo, "Lunes", "Martes")
- *         horaEntrada:
- *           type: string
- *           format: time
- *           description: Hora de entrada (formato HH:mm:ss)
- *         horaSalida:
+ *           description: Día de la semana
+ *         hora_entrada:
  *           type: string
  *           format: time
- *           description: Hora de salida (formato HH:mm:ss)
+ *           description: Hora de entrada
+ *         hora_salida:
+ *           type: string
+ *           format: time
+ *           description: Hora de salida
  *       required:
- *         - idEmpleado
- *         - diaSemana
- *         - horaEntrada
- *         - horaSalida
+ *         - id_empleado
+ *         - dia_semana
+ *         - hora_entrada
+ *         - hora_salida
  *       example:
- *         idEmpleado: "64fdf8a4c9b34d0034f865b2"
- *         diaSemana: "Lunes"
- *         horaEntrada: "08:00:00"
- *         horaSalida: "17:00:00"
+ *         id_empleado: "648d29f0e4f4a8cce401b1f1"
+ *         dia_semana: "Lunes"
+ *         hora_entrada: "08:00"
+ *         hora_salida: "16:00"
  */
 
 /**
  * @swagger
- * /horarios:
+ * /api/horarios:
  *   post:
- *     summary: Registra un nuevo horario en la Base de Datos
+ *     summary: Registrar un nuevo horario
  *     tags: [Horarios]
  *     requestBody:
  *       required: true
@@ -55,99 +55,84 @@ const router = express.Router();
  *           schema:
  *             $ref: '#/components/schemas/Horario'
  *     responses:
- *       200:
- *         description: Nuevo horario creado en la Base de Datos
- *       500:
- *         description: Error al crear el horario
+ *       201:
+ *         description: Horario registrado
  */
+router.post("/horarios", registrarHorario);
 
 /**
  * @swagger
- * /horarios:
+ * /api/horarios:
  *   get:
- *     summary: Retorna los registros de los horarios
+ *     summary: Listar todos los horarios
  *     tags: [Horarios]
  *     responses:
  *       200:
- *         description: Lista de los horarios en la Base de Datos
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Horario'
+ *         description: Lista de horarios
  */
+router.get("/horarios", listarHorarios);
 
 /**
  * @swagger
- * /horarios/{id}:
+ * /api/horarios/{id}:
  *   get:
- *     summary: Consulta un horario por su ID
+ *     summary: Consultar un horario por ID
  *     tags: [Horarios]
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: ID del horario a consultar
+ *         description: ID del horario
  *     responses:
  *       200:
- *         description: Detalle del horario consultado
- *       404:
- *         description: No se encontró el horario
+ *         description: Datos del horario
  */
-
-/**
- * @swagger
- * /horarios/{id}:
- *   put:
- *     summary: Actualiza un horario existente en la Base de Datos
- *     tags: [Horarios]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID del horario a actualizar
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Horario'
- *     responses:
- *       200:
- *         description: Horario actualizado exitosamente
- *       404:
- *         description: No se encontró el horario
- */
-
-/**
- * @swagger
- * /horarios/{id}:
- *   delete:
- *     summary: Elimina un horario de la Base de Datos
- *     tags: [Horarios]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID del horario a eliminar
- *     responses:
- *       200:
- *         description: Horario eliminado exitosamente
- *       404:
- *         description: No se encontró el horario
- */
-
-router.post("/horarios", crearHorario);
-router.get("/horarios", obtenerHorarios);
 router.get("/horarios/:id", consultarHorario);
-router.put("/horarios/:id", actualizarHorario);
-router.delete("/horarios/:id", eliminarHorario);
+
+/**
+ * @swagger
+ * /api/horarios/{id}:
+ *   put:
+ *     summary: Actualizar un horario por ID
+ *     tags: [Horarios]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del horario
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Horario'
+ *     responses:
+ *       200:
+ *         description: Horario actualizado
+ */
+router.put("/horarios/:id", modificarHorario);
+
+/**
+ * @swagger
+ * /api/horarios/{id}:
+ *   delete:
+ *     summary: Eliminar un horario por ID
+ *     tags: [Horarios]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del horario
+ *     responses:
+ *       200:
+ *         description: Horario eliminado
+ */
+router.delete("/horarios/:id", borrarHorario);
 
 export default router;

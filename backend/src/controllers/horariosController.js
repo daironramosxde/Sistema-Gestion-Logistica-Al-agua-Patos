@@ -1,87 +1,82 @@
-import Horario from '../models/horario.js';
-import Empleado from '../models/empleado.js';
+import { Horario } from "../models/horario.js";
+import Empleado from "../models/empleado.js";
 
-export const crearHorario = async (req, res) => {
-  const { id_empleado, diaSemana, horaEntrada, horaSalida } = req.body;
-
+export const registrarHorario = async (req, res) => {
   try {
+    const { id_empleado, dia_semana, hora_entrada, hora_salida } = req.body;
+
+    // Verificar si el empleado existe
     const empleado = await Empleado.findById(id_empleado);
     if (!empleado) {
-      return res.status(404).json({ error: 'Empleado no encontrado.' });
+      return res.status(404).json({ message: "Empleado no encontrado" });
     }
 
-    const nuevoHorario = new Horario({
-      id_empleado,
-      diaSemana,
-      horaEntrada,
-      horaSalida,
-    });
-
-    const horarioGuardado = await nuevoHorario.save();
-    res.status(201).json(horarioGuardado);
+    // Crear el horario
+    const nuevoHorario = new Horario({ id_empleado, dia_semana, hora_entrada, hora_salida });
+    await nuevoHorario.save();
+    res.status(201).json({ message: "Horario registrado", nuevoHorario });
   } catch (error) {
-    console.error('Error al crear el horario:', error);
-    res.status(500).json({ error: 'Error al crear el horario.' });
+    res.status(500).json({ message: "Error al registrar horario", error });
   }
 };
 
-export const obtenerHorarios = async (req, res) => {
+export const listarHorarios = async (req, res) => {
   try {
-    const horarios = await Horario.find().populate('id_empleado', 'nombre correo rol');
-    res.json(horarios);
+    const horarios = await Horario.find().populate("id_empleado", "nombre correo cargo");
+    res.status(200).json(horarios);
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener los horarios.' });
+    res.status(500).json({ message: "Error al obtener horarios", error });
   }
 };
 
 export const consultarHorario = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const horario = await Horario.findById(id);
+    const horario = await Horario.findById(req.params.id).populate("id_empleado", "nombre correo cargo");
     if (!horario) {
-      return res.status(404).json({ error: 'Horario no encontrado.' });
+      return res.status(404).json({ message: "Horario no encontrado" });
     }
-
-    res.json(horario);
+    res.status(200).json(horario);
   } catch (error) {
-    res.status(500).json({ error: 'Error al consultar el horario.' });
+    res.status(500).json({ message: "Error al consultar horario", error });
   }
 };
 
-export const actualizarHorario = async (req, res) => {
-  const { id } = req.params;
-  const { id_empleado, diaSemana, horaEntrada, horaSalida } = req.body;
-
+export const modificarHorario = async (req, res) => {
   try {
+    const { id_empleado, dia_semana, hora_entrada, hora_salida } = req.body;
+
+    // Verificar si el empleado existe
+    if (id_empleado) {
+      const empleado = await Empleado.findById(id_empleado);
+      if (!empleado) {
+        return res.status(404).json({ message: "Empleado no encontrado" });
+      }
+    }
+
     const horarioActualizado = await Horario.findByIdAndUpdate(
-      id,
-      { id_empleado, diaSemana, horaEntrada, horaSalida },
-      { new: true, runValidators: true }
+      req.params.id,
+      { id_empleado, dia_semana, hora_entrada, hora_salida },
+      { new: true }
     );
 
     if (!horarioActualizado) {
-      return res.status(404).json({ error: 'Horario no encontrado.' });
+      return res.status(404).json({ message: "Horario no encontrado" });
     }
 
-    res.json(horarioActualizado);
+    res.status(200).json({ message: "Horario actualizado", horarioActualizado });
   } catch (error) {
-    res.status(500).json({ error: 'Error al actualizar el horario.' });
+    res.status(500).json({ message: "Error al actualizar horario", error });
   }
 };
 
-export const eliminarHorario = async (req, res) => {
-  const { id } = req.params;
-
+export const borrarHorario = async (req, res) => {
   try {
-    const horarioEliminado = await Horario.findByIdAndDelete(id);
-
+    const horarioEliminado = await Horario.findByIdAndDelete(req.params.id);
     if (!horarioEliminado) {
-      return res.status(404).json({ error: 'Horario no encontrado.' });
+      return res.status(404).json({ message: "Horario no encontrado" });
     }
-
-    res.json({ mensaje: 'Horario eliminado correctamente.' });
+    res.status(200).json({ message: "Horario eliminado", horarioEliminado });
   } catch (error) {
-    res.status(500).json({ error: 'Error al eliminar el horario.' });
+    res.status(500).json({ message: "Error al eliminar horario", error });
   }
 };

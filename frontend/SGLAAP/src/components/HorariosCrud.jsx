@@ -11,6 +11,15 @@ function HorariosCrud() {
     hora_salida: "",
   });
   const [empleados, setEmpleados] = useState([]);
+  const diasSemana = [
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+    "Domingo",
+  ];
 
   useEffect(() => {
     const consultarHorarios = async () => {
@@ -84,25 +93,23 @@ function HorariosCrud() {
     }
   };
 
-
   return (
     <div className="container-todo">
-      {/* Tabla de Horarios */}
       <table className="table">
         <thead>
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Empleado</th>
-            <th scope="col">Día</th>
-            <th scope="col">Hora Entrada</th>
-            <th scope="col">Hora Salida</th>
-            <th scope="col">Acciones</th>
+            <th>ID</th>
+            <th>Empleado</th>
+            <th>Día</th>
+            <th>Hora Entrada</th>
+            <th>Hora Salida</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {listaHorarios.map((horario, index) => (
             <tr key={horario._id || index}>
-              <th scope="row">{horario._id || "N/A"}</th>
+              <td>{horario._id || "N/A"}</td>
               <td>{horario.id_empleado?.nombre || "Desconocido"}</td>
               <td>{horario.dia_semana || "Sin día"}</td>
               <td>{horario.hora_entrada || "Sin hora"}</td>
@@ -120,7 +127,6 @@ function HorariosCrud() {
         </tbody>
       </table>
 
-      {/* Formulario para Agregar Horarios */}
       <div className="container-agregar">
         <h4>Agregar Nuevo Horario</h4>
         <form
@@ -130,9 +136,7 @@ function HorariosCrud() {
           }}
         >
           <div className="mb-3">
-            <label htmlFor="idEmpleado" className="form-label">
-              Empleado:
-            </label>
+            <label htmlFor="idEmpleado" className="form-label">Empleado:</label>
             <select
               className="form-control"
               id="idEmpleado"
@@ -145,17 +149,15 @@ function HorariosCrud() {
               <option value="">Seleccione un empleado</option>
               {empleados.map((empleado) => (
                 <option key={empleado._id} value={empleado._id}>
-                  {empleado.nombre} {empleado.apellido} {/* Nombre del empleado */}
+                  {empleado.nombre} {empleado.apellido}
                 </option>
               ))}
             </select>
           </div>
+
           <div className="mb-3">
-            <label htmlFor="diaSemana" className="form-label">
-              Día:
-            </label>
-            <input
-              type="text"
+            <label htmlFor="diaSemana" className="form-label">Día:</label>
+            <select
               className="form-control"
               id="diaSemana"
               value={nuevoHorario.dia_semana}
@@ -163,12 +165,16 @@ function HorariosCrud() {
                 setNuevoHorario({ ...nuevoHorario, dia_semana: e.target.value })
               }
               required
-            />
+            >
+              <option value="">Seleccione un día</option>
+              {diasSemana.map((dia) => (
+                <option key={dia} value={dia}>{dia}</option>
+              ))}
+            </select>
           </div>
+
           <div className="mb-3">
-            <label htmlFor="horaEntrada" className="form-label">
-              Hora Entrada:
-            </label>
+            <label htmlFor="horaEntrada" className="form-label">Hora Entrada:</label>
             <input
               type="time"
               className="form-control"
@@ -180,10 +186,9 @@ function HorariosCrud() {
               required
             />
           </div>
+
           <div className="mb-3">
-            <label htmlFor="horaSalida" className="form-label">
-              Hora Salida:
-            </label>
+            <label htmlFor="horaSalida" className="form-label">Hora Salida:</label>
             <input
               type="time"
               className="form-control"
@@ -195,12 +200,110 @@ function HorariosCrud() {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary">
-            Agregar
-          </button>
+          <button type="submit" className="btn btn-primary">Agregar</button>
         </form>
       </div>
-    </div>
+      {horarioEditado && (
+      <div className="modal" style={{ display: "block" }}>
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Editar Horario</h5>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={() => setHorarioEditado(null)}
+              ></button>
+            </div>
+            <div className="modal-body">
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="idEmpleadoEdit" className="form-label">Empleado:</label>
+                  <select
+                    className="form-control"
+                    id="idEmpleadoEdit"
+                    value={horarioEditado.id_empleado}
+                    onChange={(e) =>
+                      setHorarioEditado({
+                        ...horarioEditado,
+                        id_empleado: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="">Seleccione un empleado</option>
+                    {empleados.map((empleado) => (
+                      <option key={empleado._id} value={empleado._id}>
+                        {empleado.nombre} {empleado.apellido}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="diaSemanaEdit" className="form-label">Día:</label>
+                  <select
+                      className="form-control"
+                      id="diaSemanaEdit"
+                      value={nuevoHorario.dia_semana}
+                      onChange={(e) =>
+                        setNuevoHorario({ ...nuevoHorario, dia_semana: e.target.value })
+                      }
+                      required
+                    >
+                      <option value="">Seleccione un día</option>
+                      {diasSemana.map((dia) => (
+                        <option key={dia} value={dia}>{dia}</option>
+                      ))}
+                  </select>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="horaEntradaEdit" className="form-label">Hora Entrada:</label>
+                  <input
+                    type="time"
+                    className="form-control"
+                    id="horaEntradaEdit"
+                    value={horarioEditado.hora_entrada}
+                    onChange={(e) =>
+                      setHorarioEditado({
+                        ...horarioEditado,
+                        hora_entrada: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="horaSalidaEdit" className="form-label">Hora Salida:</label>
+                  <input
+                    type="time"
+                    className="form-control"
+                    id="horaSalidaEdit"
+                    value={horarioEditado.hora_salida}
+                    onChange={(e) =>
+                      setHorarioEditado({
+                        ...horarioEditado,
+                        hora_salida: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => setHorarioEditado(null)}
+              >
+                Cancelar
+              </button>
+              <button type="button" className="btn btn-primary" onClick={guardarCambios}>
+                Guardar Cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
   );
 }
 

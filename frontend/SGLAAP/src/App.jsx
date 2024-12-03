@@ -10,6 +10,8 @@ import Areas from "./pages/Areas";
 import Ausencias from "./pages/Ausencias";
 import Usuarios from "./pages/Usuarios";
 import Horarios from "./pages/Horarios";
+import Eventos  from "./pages/evento";
+import Cliente from "./pages/cliente";
 
 const AppRoutes = () => {
   let routes = useRoutes([
@@ -19,7 +21,9 @@ const AppRoutes = () => {
     { path: "/Ausencias", element: <Ausencias /> },
     { path: "/Areas", element: <Areas /> },  // Corregido: 'elemnt' a 'element'
     { path: "/Usuarios", element: <Usuarios /> },
-    { path: "/Horarios", element: <Horarios /> },  // Corregido: 'elemnt' a 'element'
+    { path: "/Horarios", element: <Horarios /> },  
+    { path: "/Eventos", element: <Eventos /> },
+    { path: "/Clientes", element: <Cliente /> },  // Corregido: 'elemnt' a 'element'    // Corregido: 'elemnt' a 'element'
     { path: "*", element: <NotFoundPage /> }, ]); // Corregido: 'elemnt' a 'element", element: <Areas /> }, />  ]);
   return routes;
 };

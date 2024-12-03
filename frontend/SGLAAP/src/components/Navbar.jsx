@@ -29,6 +29,12 @@ function Navbar() {
         <li>
           <a href="/Horarios">Horarios</a>
         </li>
+        <li>
+          <a href="/Eventos">Eventos</a>
+        </li>
+        <li>
+          <a href="/Clientes">Cliente</a>
+        </li>
       </ul>
     </nav>
   );

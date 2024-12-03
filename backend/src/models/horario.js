@@ -1,24 +1,24 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const horarioSchema = new mongoose.Schema({
-  idEmpleado: {
+const horarioSchema = mongoose.Schema({
+  id_empleado: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Empleado', // Conexión con el modelo de empleados
+    ref: "Empleado",
     required: true,
   },
-  diaSemana: {
+  dia_semana: {
     type: String,
-    enum: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+    required: true,
+    enum: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"],
+  },
+  hora_entrada: {
+    type: String,
     required: true,
   },
-  horaEntrada: {
+  hora_salida: {
     type: String,
-    required: true, // Ejemplo: '08:00 AM'
-  },
-  horaSalida: {
-    type: String,
-    required: true, // Ejemplo: '05:00 PM'
+    required: true,
   },
 });
 
-export default mongoose.model('Horario', horarioSchema);
+export const Horario = mongoose.model("Horario", horarioSchema);
