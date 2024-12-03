@@ -1,0 +1,68 @@
+/* Estilos generales */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9; /* Fondo general */
+  }
+  
+  /* Estilos para la barra lateral */
+  .sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #2c3e50; /* Fondo oscuro */
+    color: #ecf0f1; /* Texto claro */
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Encabezado de la barra lateral */
+  .sidebar-header {
+    padding: 20px;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    border-bottom: 1px solid #34495e;
+  }
+  
+  /* Lista de enlaces */
+  .nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+  }
+  
+  /* Estilos de cada enlace */
+  .nav-links li {
+    margin: 0;
+  }
+  
+  .nav-links a {
+    display: block;
+    padding: 15px 20px;
+    color: #ecf0f1;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 1.1em;
+  }
+  
+  /* Efecto al pasar el mouse */
+  .nav-links a:hover {
+    background-color: #34495e;
+    padding-left: 30px; /* Pequeña animación */
+    color: #1abc9c; /* Resaltado */
+  }
+  
+  /* Responsive: Ajustar para pantallas más pequeñas */
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 200px;
+    }
+  
+    .nav-links a {
+      font-size: 0.9em;
+    }
+  }
+  

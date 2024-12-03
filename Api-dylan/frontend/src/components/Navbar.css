@@ -1,0 +1,51 @@
+/* Estilos para el encabezado */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50; /* Color del fondo */
+    color: #ecf0f1; /* Color del texto */
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky; /* Para que quede fijo al hacer scroll */
+    top: 0;
+    z-index: 1000;
+  }
+  
+  /* Sección del logo */
+  .navbar-logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-logo .logo {
+    width: 40px; /* Tamaño del logo */
+    height: 40px;
+    margin-right: 10px;
+  }
+  
+  .navbar-logo h2 {
+    margin: 0;
+    font-size: 1.5em;
+  }
+  
+  /* Estilos para los enlaces */
+  .navbar-links ul {
+    list-style: none;
+    display: flex;
+    gap: 15px; /* Espaciado entre enlaces */
+    margin: 0;
+    padding: 0;
+  }
+  
+  .navbar-links a {
+    text-decoration: none;
+    color: #ecf0f1;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+  }
+  
+  .navbar-links a:hover {
+    color: #1abc9c; /* Color al pasar el mouse */
+  }
+  

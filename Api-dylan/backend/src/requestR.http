@@ -1,0 +1,29 @@
+# Crear un nuevo rol
+POST http://localhost:5000/rol
+Content-Type: application/json
+
+{
+  "nombre": "Admin",
+  "descripcion": "Rol con todos los permisos"
+}
+
+
+###
+# Obtener un rol por ID
+GET http://localhost:5000/rol/
+
+###
+
+# Actualizar un rol por ID
+PUT http://localhost:5000/rol/6740d0e1e23582f2f21fd301
+Content-Type: application/json
+
+{
+  "nombre": "Moderador",
+  "descripcion": "Rol con permisos de moderación"
+}
+
+###
+
+# Eliminar un rol por ID
+DELETE http://localhost:5000/rol/6740d0e1e23582f2f21fd301

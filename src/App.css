@@ -1,0 +1,42 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #121212;
+  color: #fff;
+  padding-top: 60px; /* Espacio para el navbar fijo */
+}
+
+.content {
+  padding: 20px;
+}
+
+/* Fondo para la sección principal */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100vh; /* Altura completa de la ventana */
+  background-image: url('/ruta-a-tu-imagen.jpg'); /* Cambia esto por la ruta de tu imagen */
+  background-size: cover; /* Cubre todo el fondo */
+  background-position: center; /* Centra la imagen */
+  background-repeat: no-repeat; /* Evita que se repita */
+  color: #fff; /* Asegura que el texto sea legible */
+}
+
+/* Texto principal */
+.main-content h1 {
+  font-size: 3rem; /* Tamaño grande */
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.main-content p {
+  font-size: 1.5rem;
+}

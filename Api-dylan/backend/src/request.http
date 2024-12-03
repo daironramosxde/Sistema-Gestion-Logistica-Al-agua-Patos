@@ -1,0 +1,54 @@
+### Crear un nuevo usuario
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+  "nombre": "Dylan",
+  "email": "dyd4G@example.com",
+  "password": "admin123", 
+  "rol": "60b72f3e72a8c918e34b4a6f"
+} 
+
+###
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+  "nombre": "Luis",
+  "email": "luis@example.com",
+  "password": "admin123",
+  "rol": "60b72f3e72a8c918e34b4a6f"
+}
+
+###
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+  "nombre": "María",
+  "email": "maria@example.com",
+  "password": "admin123",
+  "rol": "60b72f3e72a8c918e34b4a6f"
+}
+
+
+
+### Obtener todos los usuarios
+GET http://localhost:5000/users
+Content-Type: application/json
+
+
+### Actualizar un usuario
+PUT http://localhost:5000/users/6740cbcea1c2945ede957562
+Content-Type: application/json
+
+{
+  "nombre": "Dylan Actualizado",
+  "email": "dyd4G_updated@example.com",
+  "password": "newpassword123",
+  "rol": "60b72f3e72a8c918e34b4a6f"
+}
+
+### Eliminar un usuario
+DELETE http://localhost:5000/users/673d278bdf8a2ea5714e654f
+Content-Type: application/json
