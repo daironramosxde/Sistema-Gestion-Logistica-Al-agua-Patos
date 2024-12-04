@@ -23,6 +23,18 @@ function Navbar() {
         <li>
           <a href="/areas">Áreas</a>
         </li>
+        <li>
+          <a href="/Usuarios">Usuarios</a>
+        </li>
+        <li>
+          <a href="/Horarios">Horarios</a>
+        </li>
+        <li>
+          <a href="/Eventos">Eventos</a>
+        </li>
+        <li>
+          <a href="/Clientes">Cliente</a>
+        </li>
       </ul>
     </nav>
   );
