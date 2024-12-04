@@ -1,0 +1,58 @@
+//endpoints//
+
+###
+POST http://localhost:9000/api/areas HTTP/1.1
+Content-Type: application/json
+
+{
+    "nombre_area": "verdurero"
+}
+
+###
+GET http://localhost:9000/api/areas HTTP/1.1
+
+###
+GET http://localhost:9000/api/areas/67365b2d754769c34070a38c HTTP/1.1
+
+###
+PUT http://localhost:9000/api/areas/673abdd09fdeac8a7ba46997 HTTP/1.1
+Content-Type: application/json
+
+{
+    "nombre_area": "Área de Prueba Actualizada"
+}
+
+###
+DELETE http://localhost:9000/api/areas/ID_DE_AREA HTTP/1.1
+
+
+// request.http
+
+###
+POST http://localhost:9000/api/recursos HTTP/1.1
+Content-Type: application/json
+
+{
+    "nombre_recurso": "Sillas",
+    "cantidad": 50,
+    "ubicacion": "Almacén A"
+}
+
+###
+GET http://localhost:9000/api/recursos HTTP/1.1
+
+###
+GET http://localhost:9000/api/recursos/{id} HTTP/1.1
+
+###
+PUT http://localhost:9000/api/recursos/{id} HTTP/1.1
+Content-Type: application/json
+
+{
+    "nombre_recurso": "Mesas",
+    "cantidad": 30,
+    "ubicacion": "Almacén B"
+}
+
+###
+DELETE http://localhost:9000/api/recursos/{id} HTTP/1.1
