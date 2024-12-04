@@ -1,0 +1,97 @@
+/* Fondo de la página */
+.login-page {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #d3d3d3; /* Color de fondo gris */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Contenedor del formulario */
+  .login-container {
+    width: 400px;
+    background-color: #03253a; /* Color azul oscuro */
+    color: #fff; /* Texto blanco */
+    padding: 30px;
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+    text-align: center;
+  }
+  
+  /* Título */
+  .login-container h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: bold;
+  }
+  
+  /* Contenedor de los inputs */
+  .login-input-container {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .login-input-container label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .login-input-container input {
+    width: 100%;
+    background-color: #03253a;
+    border: none;
+    border-bottom: 2px solid #fff; /* Línea inferior */
+    padding: 10px;
+    font-size: 14px;
+    color: #fff; /* Texto blanco */
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  
+  .login-input-container input:focus {
+    border-color: #1abc9c; /* Cambia el borde inferior al enfocarse */
+  }
+  
+  /* Botón */
+  .login-submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #1abc9c; /* Color del botón */
+    border: none;
+    border-radius: 25px; /* Bordes redondeados */
+    font-size: 16px;
+    color: #fff; /* Texto blanco */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .login-submit-btn:hover {
+    background-color: #16a085; /* Color al pasar el ratón */
+  }
+  
+  /* Enlaces */
+  .forgot-password {
+    color: #1abc9c; /* Color del enlace */
+    font-size: 14px;
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .forgot-password:hover {
+    text-decoration: underline;
+  }
+  
+  /* Roles */
+  .login-roles {
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: left;
+  }
+  

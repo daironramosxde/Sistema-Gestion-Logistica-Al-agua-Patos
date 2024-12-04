@@ -1,0 +1,23 @@
+.features {
+    padding: 2rem;
+    text-align: center;
+    background: #f9f9f9;  }
+
+.features h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}  
+.features-list {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}  
+.feature {
+    background: white;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}  

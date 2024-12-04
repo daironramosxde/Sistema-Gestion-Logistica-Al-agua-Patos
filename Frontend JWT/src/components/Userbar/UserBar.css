@@ -1,0 +1,49 @@
+.user-bar {
+    margin-left: 250px ;
+    width: calc(100% - 250px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgb(20, 41, 71);
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-avatar {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.user-name {
+    font-size: 18px;
+    font-weight: bold;
+}  
+.user-options {
+    display: flex;
+    gap: 15px;
+}  
+.user-option {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}  
+.user-option:hover {
+    color: #1abc9c;
+}  
+
+@media (max-width: 920px) {
+    .user-bar {
+        margin: 100px 0 0 0;
+        width: 90%;
+        border-radius: 0 0 50px 0;
+    }
+}

@@ -1,0 +1,109 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f5f5;
+    height: 100%;
+}
+
+h1 {
+    margin-left: 250px; /* Mantiene el margen por el navbar */
+    width: calc(100% - 250px);
+    padding: 1em;
+}
+
+.container-todo {
+    color: black;
+    display: flex;
+    flex-direction: row; /* Inicialmente, disposición horizontal */
+    align-items: flex-start; /* Alinea al inicio */
+    text-align: center;
+    margin-left: 265px;
+    margin-right: 1vw; /* Margen para el navbar */
+    gap: 1em; /* Espaciado entre elementos */
+}
+
+/* Estilo de la tabla */
+.table {
+    border-collapse: collapse;
+    min-width: 50vw;
+    overflow: hidden;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    min-height: calc(70vh - 11px);
+    border-radius: 20px;
+}
+
+/* Estilo del contenedor de agregar */
+.container-agregar {
+    min-width: 400px;
+    height: fit-content;
+    background-color: rgb(30, 59, 102);
+    border-radius: 20px;
+    color: #fff;
+    padding: 50px 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Media Queries para Responsividad */
+
+@media (max-width: 1370px) {
+    .container-todo {
+        flex-wrap: wrap; /* Permite que los elementos se ajusten en columna */
+        gap: 1.5em;
+    }
+
+    .table {
+        min-width: calc(100% - 265px); /* Mantiene el margen izquierdo */
+    }
+    .container-agregar{
+        justify-content: center;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 920px) {
+    .container-todo {
+        flex-direction: column; /* Disposición en columna */
+        align-items: center; /* Centra los elementos en columna */
+        margin: 0;
+    }
+    h1{
+        margin: 0 auto;
+        text-align: center;
+    }
+    .table, .container-agregar {
+        width: 90%; /* Respeta el margen izquierdo */
+        margin: 0 auto; 
+    }
+
+    .container-agregar {
+        padding: 30px 15px; /* Ajuste de padding en pantallas pequeñas */
+        font-size: 14px;
+    }
+
+    .table {
+        font-size: 12px;
+    }
+}
+
+/* Pantallas menores a 480px */
+@media (max-width: 560px) {
+    .container-todo {
+        flex-direction: column;
+        gap: 1em;
+    }
+
+
+
+    .container-agregar {
+        padding: 20px 10px;
+    }
+
+    .table {
+        font-size: 10px;
+    }
+}
