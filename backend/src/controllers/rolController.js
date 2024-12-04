@@ -1,95 +1,87 @@
-import { validatorHandler } from "../middlewares/validator.handler.js";
-import rolSchema from "../models/Rol.js"; // Importa el modelo de Rol
-import {
-    createRolSchema,
-    deleteRolSchema,
-    getRolSchema,
-    updateRolSchema,
-} from "../validations/rolvalidador.js";
+import Rol from '../models/rol.js';
 
-// Crear un nuevo rol
-export const crearRol = [
-  validatorHandler(createRolSchema, "body"),
-  async (req, res) => {
-    const rol = new rolSchema(req.body); // Cambié 'userSchema' por 'rolSchema'
-    try {
-      const data = await rol.save();
-      res.status(201).json(data); // Código de estado 201 para indicar que se creó el recurso
-    } catch (error) {
-      res.status(500).json({ message: error.message }); // Asegúrate de enviar `error.message` para obtener un mensaje claro
-    }
-  },
-];
-
-// Obtener todos los roles
-export const obtenerRoles = async (req, res) => {
+// Controlador para crear un rol
+export const crearRol = async (req, res) => {
   try {
-    const roles = await rolSchema.find(); // Buscamos todos los roles
-    res.json(roles);
+    const { nombre, descripcion } = req.body;
+
+    // Crear el rol
+    const nuevoRol = new Rol({ nombre, descripcion });
+    await nuevoRol.save();
+    res.status(201).json({ mensaje: 'Rol creado', rol: nuevoRol });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al crear rol', error });
   }
 };
 
-// Obtener un rol por ID
-export const getRolById = [
-  validatorHandler(getRolSchema, "params"),
-  async (req, res) => {
-    const { id } = req.params;
-    try {
-      const rol = await rolSchema.findById(id); // Buscamos un rol por ID
-      if (!rol) {
-        return res.status(404).json({
-          message: "Rol no encontrado",
-        });
-      }
-      res.json(rol);
-    } catch (error) {
-      res.status(500).json({
-        message: error.message,
-      });
-    }
-  },
-];
+// Controlador para listar todos los roles
+export const listarRoles = async (req, res) => {
+  try {
+    const roles = await Rol.find();
+    res.status(200).json(roles);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al obtener roles', error });
+  }
+};
 
-// Actualizar un rol
-export const actualizarRol = [
-  validatorHandler(getRolSchema, "params"),
-  validatorHandler(updateRolSchema, "body"),
-  async (req, res) => {
+// Controlador para consultar un rol específico
+export const consultarRol = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Buscar el rol por ID
+    const rol = await Rol.findById(id);
+    if (!rol) {
+      return res.status(404).json({ mensaje: 'Rol no encontrado' });
+    }
+
+    res.status(200).json(rol);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al consultar rol', error });
+  }
+};
+
+// Controlador para modificar un rol
+export const modificarRol = async (req, res) => {
+  try {
     const { id } = req.params;
     const { nombre, descripcion } = req.body;
-    try {
-      const rolUpdate = await rolSchema.updateOne(
-        { _id: id },
-        { $set: { nombre, descripcion } }
-      );
-      if (rolUpdate.matchedCount === 0) {
-        return res.status(404).json({ message: "Rol no encontrado" });
-      }
-      if (rolUpdate.modifiedCount === 0) {
-        return res.status(400).json({ message: "No se realizaron cambios" });
-      }
-      res.status(200).json({ message: "Rol actualizado correctamente" });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  },
-];
 
-// Borrar un rol
-export const borrarRol = [
-  validatorHandler(deleteRolSchema, "params"),
-  async (req, res) => {
-    const { id } = req.params;
-    try {
-      const result = await rolSchema.deleteOne({ _id: id }); // Cambié el uso de Promesas
-      if (result.deletedCount === 0) {
-        return res.status(404).json({ message: "Rol no encontrado" });
-      }
-      res.status(200).json({ message: "Rol eliminado correctamente" });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+    // Actualizar el rol
+    const rolActualizado = await Rol.findByIdAndUpdate(
+      id,
+      { nombre, descripcion },
+      { new: true }
+    );
+
+    if (!rolActualizado) {
+      return res.status(404).json({ mensaje: 'Rol no encontrado' });
     }
-  },
-];
+
+    res.status(200).json({ mensaje: 'Rol actualizado', rol: rolActualizado });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al actualizar rol', error });
+  }
+};
+
+// Controlador para borrar un rol
+export const borrarRol = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Eliminar el rol
+    const rolEliminado = await Rol.findByIdAndDelete(id);
+    if (!rolEliminado) {
+      return res.status(404).json({ mensaje: 'Rol no encontrado' });
+    }
+
+    res.status(200).json({ mensaje: 'Rol eliminado', rol: rolEliminado });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al eliminar rol', error });
+  }
+};

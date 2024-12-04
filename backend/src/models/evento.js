@@ -19,3 +19,4 @@ const eventoSchema = new mongoose.Schema({
 
 // Exporta el modelo para usarlo en otros archivos
 export const Evento = mongoose.model('Evento', eventoSchema);
+export default Evento;

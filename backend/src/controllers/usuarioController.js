@@ -1,92 +1,87 @@
-import { validatorHandler } from "../middlewares/validator.handler.js";
-import userSchema from "../models/Usuario.js";
-import {
-    createUserSchema,
-    deleteUserSchema,
-    getUserSchema,
-    updateUserSchema,
-} from "../validations/usuariovalidador.js";
+import Usuario from '../models/usuario.js';
 
-//   res.send("Esta ruta esta pensada para crear un usuario nuevo");
-export const crearUsuario = [
-  validatorHandler(createUserSchema, "body"),
-  async (req, res) => {
-    const user = new userSchema(req.body);
-    await user
-      .save()
-      .then((data) => res.status(201).json(data)) // Cambio el código de estado a 201 para indicar que se creó un nuevo recurso
-      .catch((error) => res.status(500).json({ message: error.message })); // Asegúrate de enviar `error.message` para obtener un mensaje más claro
-  },
-];
-
-export const obtenerUsuarios = (req, resp) => {
-  userSchema
-    .find() //Metodo usado para buscar todos los docs de una coleccion
-    .then((data) => resp.json(data))
-    .catch((error) => resp.json({ message: error }));
-};
-
-export const getUserById = [
-  validatorHandler(getUserSchema, "params"),
-  async (req, resp) => {
-    const { id } = req.params;
-    try {
-      const user = await userSchema.findById(id); //Metodo usado para buscar un documento de una coleccion
-      if (!user) {
-        return resp.status(404).json({
-          message: "Usuario no encontrado",
-        });
-      }
-      resp.json(user);
-    } catch (error) {
-      resp.status(500).json({
-        message: error.message,
-      });
-    }
-  },
-];
-
-import Usuario from '../models/Usuario.js';
-
-export const actualizarUsuario = async (req, res) => {
+// Controlador para crear un usuario
+export const crearUsuario = async (req, res) => {
   try {
     const { nombre, email, rol } = req.body;
 
-    // Verificar que los campos requeridos no estén vacíos
-    if (!nombre || !email || !rol) {
-      return res.status(400).json({ error: "Todos los campos son obligatorios." });
-    }
-
-    const usuarioActualizado = await Usuario.findByIdAndUpdate(
-      req.params.id,
-      { nombre, email, rol },
-      { new: true, runValidators: true }
-    );
-
-    if (!usuarioActualizado) {
-      return res.status(404).json({ error: "Usuario no encontrado." });
-    }
-
-    res.json(usuarioActualizado);
+    // Crear el usuario
+    const nuevoUsuario = new Usuario({ nombre, email, rol });
+    await nuevoUsuario.save();
+    res.status(201).json({ mensaje: 'Usuario creado', usuario: nuevoUsuario });
   } catch (error) {
-    res.status(500).json({ error: "Error al actualizar el usuario." });
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al crear usuario', error });
   }
 };
 
-export const borrarUsuario = [
-  validatorHandler(deleteUserSchema, "params"),
+// Controlador para listar todos los usuarios
+export const listarUsuarios = async (req, res) => {
+  try {
+    const usuarios = await Usuario.find().populate('rol', 'nombre descripcion');
+    res.status(200).json(usuarios);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al obtener usuarios', error });
+  }
+};
 
-  async (req, resp) => {
+// Controlador para consultar un usuario específico
+export const consultarUsuario = async (req, res) => {
+  try {
     const { id } = req.params;
-    try {
-      const result = await userSchema.deleteOne({ _id: id });
-      if (result.deletedCount === 0) {
-        resp.status(404).json({ message: "Usuario no encontrado" });
-      }
-      resp.status(200).json({ message: "Usuario eliminado correctamente" });
-    } catch (error) {
-      resp.status(500).json({ message: error.message });
-    }
-  },
-];
 
+    // Buscar el usuario por ID
+    const usuario = await Usuario.findById(id).populate('rol', 'nombre descripcion');
+    if (!usuario) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json(usuario);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al consultar usuario', error });
+  }
+};
+
+// Controlador para modificar un usuario
+export const modificarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nombre, email, rol } = req.body;
+
+    // Actualizar el usuario
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(
+      id,
+      { nombre, email, rol },
+      { new: true }
+    );
+
+    if (!usuarioActualizado) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json({ mensaje: 'Usuario actualizado', usuario: usuarioActualizado });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al actualizar usuario', error });
+  }
+};
+
+// Controlador para borrar un usuario
+export const borrarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Eliminar el usuario
+    const usuarioEliminado = await Usuario.findByIdAndDelete(id);
+    if (!usuarioEliminado) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json({ mensaje: 'Usuario eliminado', usuario: usuarioEliminado });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al eliminar usuario', error });
+  }
+};

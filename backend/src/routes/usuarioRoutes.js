@@ -1,138 +1,162 @@
-import express from 'express'; // Importa express para crear el enrutador
-import { actualizarUsuario, borrarUsuario, crearUsuario, obtenerUsuarios } from '../controllers/usuarioController.js'; // Importa los controladores de usuario
-import { validacionUsuario } from '../middlewares/validarDatos.js'; // Importa la validación de usuario
-const router = express.Router(); // Crea una instancia de Router
+import express from 'express';
+import { crearUsuario, listarUsuarios, consultarUsuario, modificarUsuario, borrarUsuario } from '../controllers/usuarioController.js';
+import { createUsuarioSchema, updateUsuarioSchema, getUsuarioByIdSchema, deleteUsuarioSchema } from '../validators/usuarioValidator.js';
+import { validatorHandler } from '../middleware/validator.handler.js'; 
+import { verifyToken, verifyRole } from '../middleware/Autentication.js'; 
+
+const usuarioRouter = express.Router();
 
 /**
  * @swagger
- * /users:
+ * tags:
+ *   name: Usuarios
+ *   description: Operaciones sobre los usuarios
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Usuario:
+ *       type: object
+ *       properties:
+ *         nombre:
+ *           type: string
+ *           description: Nombre del usuario.
+ *         email:
+ *           type: string
+ *           description: Email del usuario.
+ *         password:
+ *           type: string
+ *           description: Contraseña del usuario.
+ *       required:
+ *         - nombre
+ *         - email
+ *         - password
+ */
+
+/**
+ * @swagger
+ * /api/usuarios:
  *   post:
- *     summary: Crea un nuevo usuario
+ *     summary: Crear un nuevo usuario
+ *     description: Crea un nuevo usuario en la base de datos.
+ *     tags: [Usuarios]
+ *     security:
+ *       - bearerAuth: []  # Especifica que se requiere un token JWT
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               nombre:
- *                 type: string
- *                 description: Nombre del usuario
- *                 example: "Dylan"
- *               email:
- *                 type: string
- *                 description: Email del usuario
- *                 example: "dyd4G@example.com"
- *               password:
- *                 type: string
- *                 description: Password del usuario
- *                 example: "admin"
- *               rol:
- *                 type: string
- *                 description: Rol del usuario
- *                 example: "admin"
+ *             $ref: '#/components/schemas/Usuario'  # Referencia al esquema 'Usuario'
  *     responses:
- *       200:
- *         description: Usuario creado correctamente
+ *       201:
+ *         description: Usuario creado exitosamente
+ *       400:
+ *         description: Error de validación
+ *       500:
+ *         description: Error interno en el servidor
  */
+usuarioRouter.post('/', verifyToken, verifyRole(['admin']), validatorHandler(createUsuarioSchema), crearUsuario);
 
 /**
  * @swagger
- * /users:
+ * /api/usuarios:
  *   get:
- *     summary: Obtiene todos los usuarios
+ *     summary: Listar todos los usuarios
+ *     description: Obtiene la lista de todos los usuarios existentes.
+ *     tags: [Usuarios]
  *     responses:
  *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     description: ID del usuario
- *                   nombre:
- *                     type: string
- *                     description: Nombre del usuario
- *                   email:
- *                     type: string
- *                     description: Email del usuario
- *                   password:
- *                     type: string
- *                     description: Password del usuario
- *                   rol:
- *                     type: string
- *                     description: Rol del usuario
+ *         description: Lista de usuarios
+ *       500:
+ *         description: Error interno en el servidor
  */
+usuarioRouter.get('/', verifyToken, verifyRole(['admin']), listarUsuarios);
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/usuarios/{id_usuario}:
+ *   get:
+ *     summary: Obtener un usuario por ID
+ *     description: Obtiene los detalles de un usuario mediante su ID.
+ *     tags: [Usuarios]
+ *     parameters:
+ *       - in: path
+ *         name: id_usuario
+ *         required: true
+ *         description: ID del usuario
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Usuario encontrado
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error interno en el servidor
+ */
+usuarioRouter.get('/:id_usuario', verifyToken, verifyRole(['admin']), validatorHandler(getUsuarioByIdSchema), consultarUsuario);
+
+/**
+ * @swagger
+ * /api/usuarios/{id_usuario}:
  *   put:
- *     summary: Actualiza un usuario por su ID
+ *     summary: Actualizar un usuario
+ *     description: Actualiza los detalles de un usuario. Solo se pueden modificar los campos proporcionados.
+ *     tags: [Usuarios]
+ *     security:
+ *       - bearerAuth: []  # Requiere autenticación con token JWT
  *     parameters:
- *       - name: id
- *         in: path
- *         description: ID del usuario
+ *       - in: path
+ *         name: id_usuario
  *         required: true
+ *         description: ID del usuario
  *         schema:
  *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Usuario'  # Referencia al esquema 'Usuario'
  *     responses:
  *       200:
- *         description: Usuario actualizado correctamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                   description: ID del usuario
- *                 nombre:
- *                   type: string
- *                   description: Nombre del usuario
- *                 email:
- *                   type: string
- *                   description: Email del usuario
- *                 password:
- *                   type: string
- *                   description: Password del usuario
- *                 rol:
- *                   type: string
- *                   description: Rol del usuario
+ *         description: Usuario actualizado exitosamente
+ *       400:
+ *         description: Error de validación
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error interno en el servidor
  */
+usuarioRouter.put('/:id_usuario', verifyToken, verifyRole(['admin']), validatorHandler(updateUsuarioSchema), modificarUsuario);
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/usuarios/{id_usuario}:
  *   delete:
- *     summary: Elimina un usuario por su ID
+ *     summary: Eliminar un usuario
+ *     description: Elimina un usuario mediante su ID.
+ *     tags: [Usuarios]
+ *     security:
+ *       - bearerAuth: []  # Requiere autenticación con token JWT
  *     parameters:
- *       - name: id
- *         in: path
- *         description: ID del usuario
+ *       - in: path
+ *         name: id_usuario
  *         required: true
+ *         description: ID del usuario a eliminar
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Usuario eliminado correctamente
+ *         description: Usuario eliminado exitosamente
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error interno en el servidor
  */
+usuarioRouter.delete('/:id_usuario', verifyToken, verifyRole(['admin']), validatorHandler(deleteUsuarioSchema), borrarUsuario);
 
-// Ruta para crear un nuevo usuario
-router.post('/users', validacionUsuario, crearUsuario); // Colocamos la validación antes del controlador
-
-// Ruta para obtener todos los usuarios
-router.get('/users', obtenerUsuarios);
-
-// Ruta para actualizar un usuario por ID
-router.put("/users/:id", actualizarUsuario); // La ruta está correcta como "/users/:id"
-
-// Ruta para eliminar un usuario por ID
-router.delete("/users/:id", borrarUsuario); // La ruta está correcta como "/users/:id"
-
-// Exporta el enrutador para usarlo en otros archivos
-export default router;
+export default usuarioRouter;

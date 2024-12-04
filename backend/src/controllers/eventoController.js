@@ -1,72 +1,83 @@
-import { Evento } from '../models/evento.js'; // Importa el modelo de Evento
+import Evento from '../models/evento.js';
 
-// Crear un nuevo evento
+// Registrar un evento
 export const crearEvento = async (req, res) => {
-  const { fecha_evento, descripcion, cliente_id } = req.body;
   try {
-    const evento = new Evento({ fecha_evento, descripcion, cliente_id });
-    const data = await evento.save();
-    res.status(201).json(data); // Código de estado 201 para indicar que se creó el recurso
+    const { nombre, fecha, lugar, descripcion } = req.body;
+
+    const nuevoEvento = new Evento({ nombre, fecha, lugar, descripcion });
+    await nuevoEvento.save();
+    res.status(201).json({ mensaje: 'Evento registrado', evento: nuevoEvento });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al registrar evento', error });
   }
 };
 
-// Obtener todos los eventos
-export const obtenerEventos = async (req, res) => {
+// Listar todos los eventos
+export const listarEventos = async (req, res) => {
   try {
-    const eventos = await Evento.find().populate('cliente_id'); // Buscamos todos los eventos, populando la relación con 'Cliente'
-    res.json(eventos);
+    const eventos = await Evento.find();
+    res.status(200).json(eventos);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al obtener eventos', error });
   }
 };
 
-// Obtener un evento por ID
-export const obtenerEventoPorId = async (req, res) => {
-  const { id } = req.params;
+// Consultar un evento específico
+export const consultarEvento = async (req, res) => {
   try {
-    const evento = await Evento.findById(id).populate('cliente_id'); // Buscamos un evento por ID, populando la relación con 'Cliente'
+    const { id } = req.params;
+
+    const evento = await Evento.findById(id);
     if (!evento) {
-      return res.status(404).json({ message: 'Evento no encontrado' });
+      return res.status(404).json({ mensaje: 'Evento no encontrado' });
     }
-    res.json(evento);
+
+    res.status(200).json(evento);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al consultar evento', error });
   }
 };
 
-// Actualizar un evento
-export const actualizarEvento = async (req, res) => {
-  const { id } = req.params;
-  const { fecha_evento, descripcion, cliente_id } = req.body;
+// Modificar un evento
+export const modificarEvento = async (req, res) => {
   try {
-    const eventoUpdate = await Evento.updateOne(
-      { _id: id },
-      { $set: { fecha_evento, descripcion, cliente_id } }
+    const { id } = req.params;
+    const { nombre, fecha, lugar, descripcion } = req.body;
+
+    const eventoActualizado = await Evento.findByIdAndUpdate(
+      id,
+      { nombre, fecha, lugar, descripcion },
+      { new: true }
     );
-    if (eventoUpdate.matchedCount === 0) {
-      return res.status(404).json({ message: 'Evento no encontrado' });
+
+    if (!eventoActualizado) {
+      return res.status(404).json({ mensaje: 'Evento no encontrado' });
     }
-    if (eventoUpdate.modifiedCount === 0) {
-      return res.status(400).json({ message: 'No se realizaron cambios' });
-    }
-    res.status(200).json({ message: 'Evento actualizado correctamente' });
+
+    res.status(200).json({ mensaje: 'Evento actualizado', evento: eventoActualizado });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al actualizar evento', error });
   }
 };
 
-// Eliminar un evento
-export const eliminarEvento = async (req, res) => {
-  const { id } = req.params;
+// Borrar un evento
+export const borrarEvento = async (req, res) => {
   try {
-    const result = await Evento.deleteOne({ _id: id });
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ message: 'Evento no encontrado' });
+    const { id } = req.params;
+
+    const eventoEliminado = await Evento.findByIdAndDelete(id);
+    if (!eventoEliminado) {
+      return res.status(404).json({ mensaje: 'Evento no encontrado' });
     }
-    res.status(200).json({ message: 'Evento eliminado correctamente' });
+
+    res.status(200).json({ mensaje: 'Evento eliminado', evento: eventoEliminado });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al eliminar evento', error });
   }
 };

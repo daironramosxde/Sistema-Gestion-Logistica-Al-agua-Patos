@@ -1,49 +1,20 @@
-// index.js
-import cors from "cors";
-import dotenv from "dotenv";
 import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
-import conectarBD from "./config/conexion.js";
-import areasRoutes from "./routes/areas.js";
-import ausenciasRoutes from "./routes/ausencias.js";
-import empleadosRoutes from "./routes/empleadosRoutes.js";
-import recursosRoutes from "./routes/recursos.js"; // Rutas de recursos
+import bodyParser from "body-parser";
+import cors from "cors";
+import { port } from './config/conexion.js';
+import { swaggerJSDocs } from './swagger.js'; 
+
+import areasRoutes from "./routes/areasRoutes.js";
+import ausenciasRoutes from "./routes/ausenciaRouter.js";
+import beneficiosRoutes from "./routes/beneficioRouter.js";
+import clienteRoutes from "./routes/clienteRoutes.js";
+import empleadosRoutes from "./routes/empleadoRoutes.js";
+import eventoRoutes from "./routes/eventoRoutes.js";
+import horariosRoutes from "./routes/horarioRoutes.js";
+import recursosRoutes from "./routes/recursoRoutes.js";
 import rolRoutes from "./routes/rolRoutes.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
-import horariosRoutes from "./routes/horarios.js";
-import beneficiosRoutes from "./routes/beneficios.js";
-import clienteRoutes from "./routes/cliente.js";
-import eventoRoutes from "./routes/evento.js";
 
-dotenv.config();
-
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-
-import swaggerJsDoc from "swagger-jsdoc";
-import swaggerUI from "swagger-ui-express";
-
-
-const swaggerSpec = {
-    definition: {
-        openapi: "3.0.0",
-        info: {
-            title: "API de Gestión de Áreas y Recursos",
-            version: "1.0.0",
-            description: "Documentación de la API para gestionar áreas y recursos",
-        },
-        servers: [
-            {
-                url: "http://localhost:9000",
-                description: "Servidor local",
-            },
-        ],
-    },
-    apis: [`${path.join(__dirname, "./routes/*.js")}`], // Incluir rutas para documentación
-};
 
 let corsOptions = {
     origin: '*',
@@ -51,32 +22,31 @@ let corsOptions = {
     optionsSuccessStatus: 200,
 };
 
-const app = express(corsOptions);
-
-app.use(cors());
-
-
+const app = express();
 app.use(express.json());
-app.use("/api", empleadosRoutes);
-app.use("/api", areasRoutes);
-app.use("/api", ausenciasRoutes);
-app.use("/api", recursosRoutes); 
-app.use("/api", usuarioRoutes);
-app.use("/api", rolRoutes);
-app.use("/api", horariosRoutes);
-app.use("/api", beneficiosRoutes);
-app.use("/api", clienteRoutes)
-app.use("/api", eventoRoutes)
-app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerJsDoc(swaggerSpec)));
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors(corsOptions));
+
+app.use("/api/areas", areasRoutes);
+app.use("/api/ausencias", ausenciasRoutes);
+app.use("/api/beneficios", beneficiosRoutes);
+app.use("/api/clientes", clienteRoutes);
+app.use("/api/empleados", empleadosRoutes);
+app.use("/api/eventos", eventoRoutes);
+app.use("/api/horarios", horariosRoutes);
+app.use("/api/recursos", recursosRoutes);
+app.use("/api/rol", rolRoutes);
+app.use("/api/usuarios", usuarioRoutes);
 
 
 app.get("/", (req, res) => {
-    res.send("<h1>Bienvenido al API WEB de Áreas y Recursos</h1>");
+    res.send("<h1>Bienvenido al API WEB de SGLAAP</h1>");
 });
 
-conectarBD();
-const port = process.env.PORT || 9000;
+swaggerJSDocs(app, port);
+
+
 app.listen(port, () => {
-    console.log(`Servidor escuchando en el puerto ${port}`);
+    console.log(`Servidor dentro del puerto ${port}`);
 });

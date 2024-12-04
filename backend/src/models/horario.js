@@ -22,3 +22,4 @@ const horarioSchema = mongoose.Schema({
 });
 
 export const Horario = mongoose.model("Horario", horarioSchema);
+export default Horario;

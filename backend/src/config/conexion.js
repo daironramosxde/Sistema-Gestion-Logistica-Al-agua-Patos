@@ -1,20 +1,26 @@
-// Conexión a MongoDB
-
-// import dotenv from "dotenv";
 import mongoose from "mongoose";
+import dotenv from "dotenv"
 
+dotenv.config();
+
+if (!process.env.MONGODB_URI) {
+    console.error("Defina la variable de entorno");
+    process.exit(1); 
+}
 
 const port = process.env.PORT || 9000;
 
-const conectarBD=()=>{
-    mongoose
-        .connect(process.env.MONGODB_URI)
-        .then(() => {
-            console.log("Conectado a MongoDB");
-        })
-        .catch((error) => {
-            console.error(`Ocurrió el siguiente error al conectarse: ${error.message}`);
-        });
-}
+const conexionBD = async () => {
+    try {
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log('Se ha conectado a MONGODB exitosamente');
+    } catch (error) {
+        console.error(`Hay un error al conectarse: ${error.message}`);
+        process.exit(1);
+    }
+};
 
-export default conectarBD;  
+conexionBD();
+
+
+export { port };

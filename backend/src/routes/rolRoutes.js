@@ -1,69 +1,114 @@
-import express from 'express'; // Importa express para crear el enrutador
-import { actualizarRol, borrarRol, crearRol, obtenerRoles } from '../controllers/rolController.js';
-import { validacionRol } from '../middlewares/validarDatos.js'; // Importa las validaciones
-const router = express.Router(); // Crea una instancia de Router
+import express from 'express';
+import { crearRol, listarRoles, consultarRol, modificarRol, borrarRol } from '../controllers/rolController.js';
+import { createRolSchema, updateRolSchema, getRolByIdSchema, deleteRolSchema } from '../validators/rolValidator.js';
+import { validatorHandler } from '../middleware/validator.handler.js'; 
+import { verifyToken, verifyRole } from '../middleware/Autentication.js'; 
+
+const rolRouter = express.Router();
 
 /**
  * @swagger
- * /rol:
+ * tags:
+ *   name: Roles
+ *   description: Operaciones sobre los roles
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Rol:
+ *       type: object
+ *       properties:
+ *         nombre:
+ *           type: string
+ *           description: Nombre del rol.
+ *         descripcion:
+ *           type: string
+ *           description: Descripción del rol.
+ *       required:
+ *         - nombre
+ *         - descripcion
+ */
+
+/**
+ * @swagger
+ * /api/roles:
  *   post:
- *     summary: Crea un nuevo rol
+ *     summary: Crear un nuevo rol
+ *     description: Crea un nuevo rol en la base de datos.
  *     tags: [Roles]
+ *     security:
+ *       - bearerAuth: []  # Especifica que se requiere un token JWT
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               nombre:
- *                 type: string
- *                 example: Administrador
- *               descripcion:
- *                 type: string
- *                 example: Rol de Administrador
+ *             $ref: '#/components/schemas/Rol'  # Referencia al esquema 'Rol'
  *     responses:
  *       201:
  *         description: Rol creado exitosamente
  *       400:
- *         description: Error en la solicitud
+ *         description: Error de validación
+ *       500:
+ *         description: Error interno en el servidor
  */
-/**
- * @swagger
- * /rol:
- *   get:
- *     summary: Obtiene todos los roles
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     description: ID del rol
- *                   nombre:
- *                     type: string
- *                     description: Nombre del rol
- *                   descripcion:
- *                     type: string
- *                     description: Descripción del rol
- */
+rolRouter.post('/', verifyToken, verifyRole(['admin']), validatorHandler(createRolSchema), crearRol);
 
 /**
  * @swagger
- * /rol/{id}:
- *   put:
- *     summary: Actualiza un rol por su ID
+ * /api/roles:
+ *   get:
+ *     summary: Listar todos los roles
+ *     description: Obtiene la lista de todos los roles existentes.
+ *     tags: [Roles]
+ *     responses:
+ *       200:
+ *         description: Lista de roles
+ *       500:
+ *         description: Error interno en el servidor
+ */
+rolRouter.get('/', verifyToken, verifyRole(['admin']), listarRoles);
+
+/**
+ * @swagger
+ * /api/roles/{id_rol}:
+ *   get:
+ *     summary: Obtener un rol por ID
+ *     description: Obtiene los detalles de un rol mediante su ID.
+ *     tags: [Roles]
  *     parameters:
- *       - name: id
- *         in: path
- *         description: ID del rol
+ *       - in: path
+ *         name: id_rol
  *         required: true
+ *         description: ID del rol
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Rol encontrado
+ *       404:
+ *         description: Rol no encontrado
+ *       500:
+ *         description: Error interno en el servidor
+ */
+rolRouter.get('/:id_rol', verifyToken, verifyRole(['admin']), validatorHandler(getRolByIdSchema), consultarRol);
+
+/**
+ * @swagger
+ * /api/roles/{id_rol}:
+ *   put:
+ *     summary: Actualizar un rol
+ *     description: Actualiza los detalles de un rol. Solo se pueden modificar los campos proporcionados.
+ *     tags: [Roles]
+ *     security:
+ *       - bearerAuth: []  # Requiere autenticación con token JWT
+ *     parameters:
+ *       - in: path
+ *         name: id_rol
+ *         required: true
+ *         description: ID del rol
  *         schema:
  *           type: string
  *     requestBody:
@@ -71,42 +116,43 @@ const router = express.Router(); // Crea una instancia de Router
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               nombre:
- *                 type: string
- *                 description: Nombre del rol
- *                 example: "admin"
+ *             $ref: '#/components/schemas/Rol'  # Referencia al esquema 'Rol'
+ *     responses:
+ *       200:
+ *         description: Rol actualizado exitosamente
+ *       400:
+ *         description: Error de validación
+ *       404:
+ *         description: Rol no encontrado
+ *       500:
+ *         description: Error interno en el servidor
  */
+rolRouter.put('/:id_rol', verifyToken, verifyRole(['admin']), validatorHandler(updateRolSchema), modificarRol);
 
 /**
  * @swagger
- * /rol/{id}:
+ * /api/roles/{id_rol}:
  *   delete:
- *     summary: Elimina un rol por su ID
+ *     summary: Eliminar un rol
+ *     description: Elimina un rol mediante su ID.
+ *     tags: [Roles]
+ *     security:
+ *       - bearerAuth: []  # Requiere autenticación con token JWT
  *     parameters:
- *       - name: id
- *         in: path
- *         description: ID del rol
+ *       - in: path
+ *         name: id_rol
  *         required: true
+ *         description: ID del rol a eliminar
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Rol eliminado correctamente
+ *         description: Rol eliminado exitosamente
+ *       404:
+ *         description: Rol no encontrado
+ *       500:
+ *         description: Error interno en el servidor
  */
+rolRouter.delete('/:id_rol', verifyToken, verifyRole(['admin']), validatorHandler(deleteRolSchema), borrarRol);
 
-// Ruta para crear un nuevo rol
-router.post('/rol', validacionRol, crearRol); // Colocamos la validación antes del controlador
-
-// Ruta para obtener todos los roles
-router.get('/rol', obtenerRoles);
-
-// Ruta para actualizar un rol por ID
-router.put("/rol/:id", actualizarRol); // Corregimos la ruta a "/rol/:id"
-
-// Ruta para eliminar un rol por ID
-router.delete("/rol/:id", borrarRol); // Corregimos la ruta a "/rol/:id"
-
-// Exporta el enrutador para usarlo en otros archivos
-export default router;
+export default rolRouter;

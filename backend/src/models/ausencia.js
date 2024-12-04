@@ -17,3 +17,4 @@ const ausenciaSchema = mongoose.Schema({
 });
 
 export const Ausencia = mongoose.model("Ausencia", ausenciaSchema);
+export default Ausencia;

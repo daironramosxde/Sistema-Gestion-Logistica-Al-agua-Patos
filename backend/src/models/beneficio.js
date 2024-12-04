@@ -17,5 +17,5 @@ const beneficioSchema = mongoose.Schema({
 });
 
 export const Beneficio = mongoose.model("Beneficio", beneficioSchema);
-
+export default Beneficio;
 
