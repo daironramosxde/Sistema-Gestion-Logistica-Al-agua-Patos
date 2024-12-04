@@ -178,3 +178,35 @@ Content-Type: application/json
 
 ###
 DELETE http://localhost:9000/api/evento/674f05f9c14925c50bfa7bcb HTTP/1.1
+
+
+###
+POST http://localhost:9000/api/usuarios HTTP/1.1
+Content-Type: application/json
+
+{
+  "nombre": "juanito",
+  "email": "juanito@xde.com",
+  "password": "12345678910",
+  "rol":""
+}
+
+###
+GET http://localhost:9000/api/usuarios HTTP/1.1
+
+###
+GET http://localhost:9000/api/usuarios/ HTTP/1.1
+
+###
+PUT http://localhost:9000/api/usuarios/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "nombre": "string",
+  "email": "string",
+  "password": "string",
+    "rol":"admin"
+}
+
+###
+DELETE http://localhost:9000/api/usuarios/ HTTP/1.1

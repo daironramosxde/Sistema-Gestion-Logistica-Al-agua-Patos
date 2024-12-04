@@ -29,6 +29,7 @@ const options = {
   apis: [
     './src/routes/areasRoutes.js',
     './src/routes/ausenciaRouter.js',
+    './src/routes/autenticationRoutes.js',
     './src/routes/beneficioRouter.js',
     './src/routes/clienteRoutes.js',
     './src/routes/empleadoRoutes.js',
@@ -50,7 +51,7 @@ const swaggerJSDocs = (app, port) => {
     res.send(swaggerSpec);
   });
   console.log(
-    `Versión No 1 de la documentación estará disponible en http://localhost:${port}/api-docs`
+    ` documentación en http://localhost:${port}/api-docs`
   );
 };
 

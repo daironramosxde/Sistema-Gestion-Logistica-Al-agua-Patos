@@ -6,6 +6,7 @@ import { swaggerJSDocs } from './swagger.js';
 
 import areasRoutes from "./routes/areasRoutes.js";
 import ausenciasRoutes from "./routes/ausenciaRouter.js";
+import autenticacionRoutes from "./routes/autenticationRoutes.js";
 import beneficiosRoutes from "./routes/beneficioRouter.js";
 import clienteRoutes from "./routes/clienteRoutes.js";
 import empleadosRoutes from "./routes/empleadoRoutes.js";
@@ -30,6 +31,7 @@ app.use(cors(corsOptions));
 
 app.use("/api/areas", areasRoutes);
 app.use("/api/ausencias", ausenciasRoutes);
+app.use("/api/autenticacion",autenticacionRoutes );
 app.use("/api/beneficios", beneficiosRoutes);
 app.use("/api/clientes", clienteRoutes);
 app.use("/api/empleados", empleadosRoutes);

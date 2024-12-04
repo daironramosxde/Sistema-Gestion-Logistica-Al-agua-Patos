@@ -1,16 +1,17 @@
-import mongoose from 'mongoose'; // Importa Mongoose para crear el esquema
+import mongoose from 'mongoose';
 
-// Define el esquema de la colección de roles
-export  const rolSchema = new mongoose.Schema({
+const rolSchema = new mongoose.Schema({
   nombre: {
     type: String,
     required: true,
-    unique: true, // El nombre del rol debe ser único
+    unique: true,
   },
   descripcion: {
-    type: String, // Una breve descripción opcional del rol
+    type: String,
   },
 });
 
-// Exporta el modelo para usarlo en otros archivos
-export default mongoose.model("Rol", rolSchema);
+// Verifica si el modelo ya está compilado
+const Rol = mongoose.models.Rol || mongoose.model("Rol", rolSchema);
+
+export default Rol;

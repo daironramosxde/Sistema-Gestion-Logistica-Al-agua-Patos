@@ -1,11 +1,10 @@
-import bcrypt from 'bcrypt'; // Importa bcrypt para encriptar contraseñas
-import mongoose from 'mongoose'; // Importa Mongoose para crear el esquema
+import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 
-// Define el esquema de la colección de usuarios
-export const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   nombre: {
-    type: String, // El nombre es un campo de tipo string
-    required: true, // Es obligatorio
+    type: String,
+    required: true,
   },
   email: {
     type: String,
@@ -19,19 +18,26 @@ export const userSchema = new mongoose.Schema({
   },
   rol: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'Rol',
     required: true,
   },
 });
 
-// Middleware para encriptar la contraseña antes de guardarla
-userSchema.pre('save', async function (next) {
-  if (this.isModified('password')) {
-    this.password = await bcrypt.hash(this.password, 10);
+userSchema.pre('save', async function(next) {
+  const usuario = this;
+  if (!usuario.isModified('password')) {
+    return next();
   }
-  next();
+  try {
+    const salt = await bcrypt.genSalt(10);
+    usuario.password = await bcrypt.hash(usuario.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
+// Usar mongoose.models para evitar la redefinición del modelo
+const Usuario = mongoose.models.Usuario || mongoose.model('Usuario', userSchema);
 
-
-// Exporta el modelo para usarlo en otros archivos
-export default mongoose.model("Usuario", userSchema);
+export default Usuario;
