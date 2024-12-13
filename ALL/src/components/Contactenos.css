@@ -1,0 +1,108 @@
+/* Estilos Generales */
+.contactenos {
+    margin: 40px auto;
+    padding: 20px 30px;
+    max-width: 1200px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.contactenos h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4a7dfc;
+    margin-bottom: 20px;
+}
+
+/* Contenedor principal */
+.contacto-contenedor {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Formulario de Contacto */
+.formulario-contacto {
+    flex: 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.formulario-contacto .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.formulario-contacto label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.formulario-contacto input,
+.formulario-contacto textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.formulario-contacto input:focus,
+.formulario-contacto textarea:focus {
+    outline: none;
+    border-color: #4a7dfc;
+}
+
+.btn-enviar {
+    display: inline-block;
+    background-color: #4a7dfc;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-enviar:hover {
+    background-color: #3b64c3;
+}
+
+/* Información de Contacto */
+.informacion-contacto {
+    flex: 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.informacion-contacto h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4a7dfc;
+    margin-bottom: 15px;
+}
+
+.informacion-contacto p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .contacto-contenedor {
+        flex-direction: column;
+    }
+}

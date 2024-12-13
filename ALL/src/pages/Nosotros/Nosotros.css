@@ -1,0 +1,78 @@
+
+/* Sección principal de "Sobre Nosotros" */
+.sobre-nosotros {
+    text-align: center;
+    margin: 40px auto;
+    padding: 20px 30px;
+    max-width: 1800px;
+    background-color: #fff; /* Fondo blanco */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+.sobre-nosotros h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4a7dfc; /* Azul para los títulos */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sobre-nosotros p {
+    font-size: 16px;
+    line-height: 1.6;
+    text-align: justify;
+    margin-bottom: 20px;
+}
+
+/* Imagen */
+.imagen-equipo {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+/* Sección de valores */
+.valores {
+    margin: 40px auto;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.valor {
+    flex: 1;
+    background-color: #fff; /* Fondo blanco */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.valor:hover {
+    transform: translateY(-5px); /* Efecto al pasar el mouse */
+}
+
+.valor h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4a7dfc;
+    margin-bottom: 15px;
+}
+
+.valor p {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #666; /* Texto gris */
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .valores {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
